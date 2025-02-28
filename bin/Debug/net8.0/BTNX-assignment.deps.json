@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "BTNX-assignment/1.0.0": {
+        "runtime": {
+          "BTNX-assignment.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "BTNX-assignment/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

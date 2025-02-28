@@ -1,0 +1,64 @@
+@page "/update-profile"
+@using BTNX_assignment.Components.ProfileForm
+
+<div id="updateProfile">
+<PageTitle>Update Profile</PageTitle>
+
+<h3 class="page-header">Update Profile:</h3>
+
+@if(!isProfileActive){
+    <table class="profile-table">
+        <tr class="profile-table-header">
+            <th>
+                First Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                Email Address
+            </th>
+            <th>
+                Phone Number
+            </th>
+            <th>
+            </th>
+        </tr>
+        <tr class="profile-table-row">
+            <td>
+                Yichen 
+            </td>
+            <td>
+                Liu
+            </td>
+            <td>
+                yc25liu@uwaterloo.ca
+            </td>
+            <td>
+                4034790668
+            </td>
+            <td class="profile-actions">
+                <button>Edit</button>
+                <button>Delete</button>
+            </td>
+        </tr>
+    </table>
+}
+else {
+    <div>
+        <button>Back</button>
+        <ProfileForm />
+    </div>
+    
+}
+</div>
+
+
+@code{
+    private bool isProfileActive {get; set;} = true;
+    private int activeID {get; set;} = 0;
+    private string activeFirstName {get; set;} = string.Empty;
+    private string activeLastName {get; set;} = string.Empty;
+    private string activeEmail {get; set;} = string.Empty;
+    private string activePhoneNumber {get; set;} = string.Empty;
+}

@@ -53,3 +53,15 @@ build_metadata.AdditionalFiles.CssScope = b-orjil2unb4
 [/home/yichen/BTNX-assignment/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-75btewbc7r
+
+[/home/yichen/BTNX-assignment/Components/Pages/CreateProfile/CreateProfile.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9DcmVhdGVQcm9maWxlL0NyZWF0ZVByb2ZpbGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-k0dp1zf33a
+
+[/home/yichen/BTNX-assignment/Components/Pages/UpdateProfile/UpdateProfile.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9VcGRhdGVQcm9maWxlL1VwZGF0ZVByb2ZpbGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-o6czxgz0s2
+
+[/home/yichen/BTNX-assignment/Components/ProfileForm/ProfileForm.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Qcm9maWxlRm9ybS9Qcm9maWxlRm9ybS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-ypbde6y61j
