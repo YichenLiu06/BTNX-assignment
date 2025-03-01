@@ -1,12 +1,15 @@
 @page "/update-profile"
 @using BTNX_assignment.Components.ProfileForm
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <div id="updateProfile">
 <PageTitle>Update Profile</PageTitle>
 
 <h3 class="page-header">Update Profile:</h3>
 
-@if(!isProfileActive){
+@if(!IsProfileActive){
     <table class="profile-table">
         <tr class="profile-table-header">
             <th>
@@ -24,30 +27,39 @@
             <th>
             </th>
         </tr>
-        <tr class="profile-table-row">
+        @foreach(Profile profile in Profiles){
+            <tr class="profile-table-row">
             <td>
-                Yichen 
+                @profile.FirstName
             </td>
             <td>
-                Liu
+                @profile.LastName
             </td>
             <td>
-                yc25liu@uwaterloo.ca
+                @profile.Email
             </td>
             <td>
-                4034790668
+                @profile.PhoneNumber
             </td>
             <td class="profile-actions">
-                <button>Edit</button>
-                <button>Delete</button>
+                <button @onclick="@(e => {
+                    IsProfileActive = true;
+                    ActiveProfile = profile;
+                    })">Edit</button>
+                <button @onclick="@(async () => {DeleteProfile(profile.Id);})">Delete</button>
             </td>
         </tr>
+        }
     </table>
 }
 else {
     <div>
-        <button>Back</button>
-        <ProfileForm />
+        <button @onclick=@(e => {
+            IsProfileActive=false;
+            ActiveProfile=null;
+            })>Back</button>
+        <ProfileForm SubmitCallback="UpdateActiveProfile" PlaceholderProfile="ActiveProfile"/>
+    using System.Configuration.Assemblies;
     </div>
     
 }
@@ -55,10 +67,25 @@ else {
 
 
 @code{
-    private bool isProfileActive {get; set;} = true;
-    private int activeID {get; set;} = 0;
-    private string activeFirstName {get; set;} = string.Empty;
-    private string activeLastName {get; set;} = string.Empty;
-    private string activeEmail {get; set;} = string.Empty;
-    private string activePhoneNumber {get; set;} = string.Empty;
+    List<Profile> Profiles = [];
+    protected override async Task OnInitializedAsync(){
+        var client = HttpClientFactory.CreateClient("ProfileAPI");
+        Profiles = await client.GetFromJsonAsync<List<Profile>>("profiles");
+        IsLoading = false;
+    }
+    private bool IsProfileActive { get; set; } = false;
+    private bool IsLoading { get; set; } = true;
+    Profile? ActiveProfile { get; set; } = null;
+
+    private async void UpdateActiveProfile(Profile profile){
+        var client = HttpClientFactory.CreateClient("ProfileAPI");
+        var response = await client.PutAsJsonAsync($"profiles/{ActiveProfile.Id}", profile);
+        NavigationManager.Refresh(true);
+    }
+
+    private async void DeleteProfile(int id){
+        var client = HttpClientFactory.CreateClient("ProfileAPI");
+        var response = await client.DeleteAsync($"profiles/{id}");
+        NavigationManager.Refresh(true);
+    }
 }

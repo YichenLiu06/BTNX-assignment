@@ -1,7 +1,18 @@
 @using BTNX_assignment.Components.ProfileForm
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 @page "/create-profile"
 <PageTitle>Create Profile</PageTitle>
 
 <h3 class="page-header">Create Profile:</h3>
-<ProfileForm />
+<ProfileForm SubmitCallback=@CreateNewProfile />
+
+@code{
+    private async void CreateNewProfile(Profile profile){
+        var client = HttpClientFactory.CreateClient("ProfileAPI");
+        var response = await client.PostAsJsonAsync("profiles", profile);
+        NavigationManager.Refresh(true);
+    }
+}

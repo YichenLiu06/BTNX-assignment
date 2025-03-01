@@ -1,12 +1,39 @@
+@inject IHttpClientFactory HttpClientFactory
+@rendermode InteractiveServer
 
+<EditForm Model=@Profile OnValidSubmit=@(async () => {await SubmitCallback.InvokeAsync(Profile);})>
+    <DataAnnotationsValidator/>
+    
+    <div class="form-group">
+        <label for="FirstName">First Name</label>
+        <InputText id="FirstName" placeholder=@PlaceholderProfile?.FirstName @bind-Value=Profile.FirstName class="form-control"  />
+    </div>
+    <div class="form-group">
+        <label for="FirstName">Last Name</label>
+        <InputText id="FirstName" placeholder=@PlaceholderProfile?.LastName @bind-Value=Profile.LastName  />
+    </div>
+    <div class="form-group">
+        <label for="FirstName">Email</label>
+        <InputText id="FirstName" placeholder=@PlaceholderProfile?.Email @bind-Value=Profile.Email  />
+    </div>
+    <div class="form-group">
+        <label for="FirstName">Phone Number</label>
+        <InputText id="FirstName" placeholder=@PlaceholderProfile?.PhoneNumber @bind-Value=Profile.PhoneNumber  />
+    </div>
+    <input type="submit" value="Submit"/>
+    <ValidationSummary/>
+</EditForm>
 
-<form class="profile-form" method="post">
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" name="firstName">
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" name="lastName">
-    <label for="email">Email Addres:</label>
-    <input type="email" id="email" name="email">
-    <label for="tel">Phone Number:</label>
-    <input type="tel" id="phoneNumber" name="phoneNumber">
-</form>
+@code {
+    private Profile Profile;
+    
+    [Parameter]
+    public EventCallback<Profile> SubmitCallback {get; set;}
+
+    protected override void OnInitialized(){
+        Profile ??= PlaceholderProfile ?? new Profile();
+    }
+
+    [Parameter]
+    public Profile? PlaceholderProfile {get; set;}
+}
