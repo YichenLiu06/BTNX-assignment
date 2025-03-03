@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "PI8BwisyxTwi8YI+RXsTI2Mmv40OAV0RTj3G/ipNstw=",
+  "Hash": "EiwpCc1L4Fv4wxOAPcIebMim6pX8fUJmAoSIRy7SCEM=",
   "Source": "BTNX-assignment",
   "BasePath": "_content/BTNX-assignment",
   "Mode": "Default",
@@ -129,6 +129,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/favicon.png"
+    },
+    {
+      "Identity": "/home/yichen/BTNX-assignment/wwwroot/js/datatables.js",
+      "SourceId": "BTNX-assignment",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/yichen/BTNX-assignment/wwwroot/",
+      "BasePath": "_content/BTNX-assignment",
+      "RelativePath": "js/datatables.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/datatables.js"
     }
   ]
 }

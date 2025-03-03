@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BTNX-assignment")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cdaf76fc6743c0ef031c5525c392aaa796b2e7a2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b0b25848d6526f5b84fde1814bf9d90254ffe6a")]
 [assembly: System.Reflection.AssemblyProductAttribute("BTNX-assignment")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BTNX-assignment")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

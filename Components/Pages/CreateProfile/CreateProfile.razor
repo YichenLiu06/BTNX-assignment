@@ -4,15 +4,19 @@
 @rendermode InteractiveServer
 
 @page "/create-profile"
+@page "/"
 <PageTitle>Create Profile</PageTitle>
 
+<p>@message</p>
+
 <h3 class="page-header">Create Profile:</h3>
-<ProfileForm SubmitCallback=@CreateNewProfile />
+<ProfileForm SubmitCallback=@CreateNewProfile/>
 
 @code{
-    private async void CreateNewProfile(Profile profile){
+    public string? message = null;
+    private async Task<HttpResponseMessage> CreateNewProfile(Profile profile){
         var client = HttpClientFactory.CreateClient("ProfileAPI");
         var response = await client.PostAsJsonAsync("profiles", profile);
-        NavigationManager.Refresh(true);
+        return response;
     }
 }

@@ -1,39 +1,68 @@
 @inject IHttpClientFactory HttpClientFactory
 @rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject ILogger<ProfileForm> Logger
+@inject IJSRuntime JsRuntime
 
-<EditForm Model=@Profile OnValidSubmit=@(async () => {await SubmitCallback.InvokeAsync(Profile);})>
-    <DataAnnotationsValidator/>
-    
-    <div class="form-group">
-        <label for="FirstName">First Name</label>
-        <InputText id="FirstName" placeholder=@PlaceholderProfile?.FirstName @bind-Value=Profile.FirstName class="form-control"  />
+<EditForm class="row g-3 w-75" EditContext=@EditContext FormName="ProfileDataForm">
+    <DataAnnotationsValidator/>   
+    <div class="form-group col-md-6">
+        <label class="form-label" for="FirstName">First Name</label>
+        <InputText class="form-control" id="FirstName" placeholder=@PlaceholderProfile?.FirstName @bind-Value=Profile.FirstName  />
+        <ValidationMessage For="() => Profile.FirstName"/>
     </div>
-    <div class="form-group">
-        <label for="FirstName">Last Name</label>
-        <InputText id="FirstName" placeholder=@PlaceholderProfile?.LastName @bind-Value=Profile.LastName  />
+    <div class="form-group col-md-6">
+        <label class="form-label" for="FirstName">Last Name</label>
+        <InputText class="form-control" id="FirstName" placeholder=@PlaceholderProfile?.LastName @bind-Value=Profile.LastName  />
+        <ValidationMessage For="() => Profile.LastName"/>
     </div>
-    <div class="form-group">
+    <div class="form-group col-12">
         <label for="FirstName">Email</label>
-        <InputText id="FirstName" placeholder=@PlaceholderProfile?.Email @bind-Value=Profile.Email  />
+        <InputText class="form-control" id="FirstName" placeholder=@PlaceholderProfile?.Email @bind-Value=Profile.Email  />
+        <ValidationMessage For="() => Profile.Email"/>
     </div>
-    <div class="form-group">
+    <div class="form-group col-12">
         <label for="FirstName">Phone Number</label>
-        <InputText id="FirstName" placeholder=@PlaceholderProfile?.PhoneNumber @bind-Value=Profile.PhoneNumber  />
+        <InputText class="form-control" id="FirstName" placeholder=@PlaceholderProfile?.PhoneNumber @bind-Value=Profile.PhoneNumber  />
+        <ValidationMessage For="() => Profile.PhoneNumber"/>
     </div>
-    <input type="submit" value="Submit"/>
-    <ValidationSummary/>
+    <div class="col-12">
+        <input class="btn btn-primary" type="submit" @onclick=@HandleValidSubmit value="Submit"/>
+    </div>
 </EditForm>
 
 @code {
     private Profile Profile;
-    
-    [Parameter]
-    public EventCallback<Profile> SubmitCallback {get; set;}
-
-    protected override void OnInitialized(){
-        Profile ??= PlaceholderProfile ?? new Profile();
-    }
-
     [Parameter]
     public Profile? PlaceholderProfile {get; set;}
+    private ValidationMessageStore ValidationMessageStore = default!;
+    private EditContext EditContext = default!;
+    
+    
+    [Parameter]
+    public Func<Profile, Task<HttpResponseMessage>> SubmitCallback {get; set;}
+    public async Task HandleValidSubmit(){
+        ValidationMessageStore.Clear();
+        EditContext.Validate(); 
+        EditContext.NotifyValidationStateChanged();
+        var response = await SubmitCallback(Profile);
+        if(response.IsSuccessStatusCode){
+            await JsRuntime.InvokeVoidAsync("alert", "Success!");
+            NavigationManager.Refresh(true);
+        }
+        else{
+            Logger.LogWarning("fail");
+            string errorContent = await response.Content.ReadAsStringAsync();
+            ValidationMessageStore.Add(EditContext.Field(nameof(Profile.Email)), errorContent);
+            EditContext.NotifyValidationStateChanged();
+        }
+    }
+
+    protected override void OnInitialized(){
+        Profile ??= PlaceholderProfile ?? new Profile(); 
+        EditContext = new EditContext(Profile);
+        ValidationMessageStore = new ValidationMessageStore(EditContext);
+    }
+
+
 }

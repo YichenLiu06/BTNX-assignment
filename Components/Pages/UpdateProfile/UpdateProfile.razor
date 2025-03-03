@@ -3,6 +3,8 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+
 
 <div id="updateProfile">
 <PageTitle>Update Profile</PageTitle>
@@ -10,56 +12,65 @@
 <h3 class="page-header">Update Profile:</h3>
 
 @if(!IsProfileActive){
-    <table class="profile-table">
-        <tr class="profile-table-header">
-            <th>
-                First Name
-            </th>
-            <th>
-                Last Name
-            </th>
-            <th>
-                Email Address
-            </th>
-            <th>
-                Phone Number
-            </th>
-            <th>
-            </th>
-        </tr>
-        @foreach(Profile profile in Profiles){
-            <tr class="profile-table-row">
-            <td>
-                @profile.FirstName
-            </td>
-            <td>
-                @profile.LastName
-            </td>
-            <td>
-                @profile.Email
-            </td>
-            <td>
-                @profile.PhoneNumber
-            </td>
-            <td class="profile-actions">
-                <button @onclick="@(e => {
-                    IsProfileActive = true;
-                    ActiveProfile = profile;
-                    })">Edit</button>
-                <button @onclick="@(async () => {DeleteProfile(profile.Id);})">Delete</button>
-            </td>
-        </tr>
-        }
+    <table class="table table-sm table-hover align-middle" id="profile-table">
+        <thead>
+            <tr class="">
+                <th class="px-3">
+                    First Name
+                </th>
+                <th class="px-3">
+                    Last Name
+                </th >
+                <th class="px-3">
+                    Email Address
+                </th>
+                <th class="px-3">
+                    Phone Number
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider p-5">
+            @foreach(Profile profile in Profiles){
+                <tr>
+                <td class="px-3">
+                    @profile.FirstName
+                </td>
+                <td class="px-3">
+                    @profile.LastName
+                </td>
+                <td class="px-3">
+                    @profile.Email
+                </td>
+                <td class="px-3">
+                    @profile.PhoneNumber
+                </td>
+                <td class="profile-actions">
+                    <button class="btn btn-outline-primary btn-sm m-2 py-1" @onclick="@(async e => {
+                        IsProfileActive = true;
+                        ActiveProfile = profile;
+                        await JSRuntime.InvokeVoidAsync("destroyDataTable", "#profile-table");
+                        })">Edit</button>
+                    <button class="btn btn-sm btn-outline-primary py-1" @onclick="@(async () => {
+                        var response = await DeleteProfile(profile.Id);
+                        await JSRuntime.InvokeVoidAsync("clearDataTable", "#profile-table");
+                        NavigationManager.Refresh(true);
+                        StateHasChanged();
+                        })">Delete</button>
+                </td>
+            </tr>
+            }
+        </tbody>
     </table>
 }
 else {
     <div>
-        <button @onclick=@(e => {
+        <button class="btn btn-outline-secondary mb-3"@onclick=@(async e => {
             IsProfileActive=false;
             ActiveProfile=null;
             })>Back</button>
         <ProfileForm SubmitCallback="UpdateActiveProfile" PlaceholderProfile="ActiveProfile"/>
-    using System.Configuration.Assemblies;
     </div>
     
 }
@@ -67,25 +78,34 @@ else {
 
 
 @code{
+    string? searchFirstName {get; set;}
+    string? searchLastName {get; set;}
+    string? searchEmail {get; set;}
+    string? searchPhoneNumber {get; set;}
+    EditContext EditContext = default!;
     List<Profile> Profiles = [];
     protected override async Task OnInitializedAsync(){
         var client = HttpClientFactory.CreateClient("ProfileAPI");
-        Profiles = await client.GetFromJsonAsync<List<Profile>>("profiles");
-        IsLoading = false;
+        Profiles = await client.GetFromJsonAsync<List<Profile>>("profiles");    
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("initializeDataTable", "#profile-table");    
     }
     private bool IsProfileActive { get; set; } = false;
-    private bool IsLoading { get; set; } = true;
     Profile? ActiveProfile { get; set; } = null;
 
-    private async void UpdateActiveProfile(Profile profile){
+    private async Task<HttpResponseMessage> UpdateActiveProfile(Profile profile){
         var client = HttpClientFactory.CreateClient("ProfileAPI");
         var response = await client.PutAsJsonAsync($"profiles/{ActiveProfile.Id}", profile);
-        NavigationManager.Refresh(true);
+        return response;
     }
 
-    private async void DeleteProfile(int id){
+    private async Task<HttpResponseMessage> DeleteProfile(Guid id){
         var client = HttpClientFactory.CreateClient("ProfileAPI");
         var response = await client.DeleteAsync($"profiles/{id}");
-        NavigationManager.Refresh(true);
+        return response;
     }
+
+
 }
